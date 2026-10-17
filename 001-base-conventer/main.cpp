@@ -1,9 +1,9 @@
 #include  <iostream>
 #include  <string>
 
-int decToBin(int dec) {
-    int bin = 0;
-    int weight = 1;
+long long decToBin(int dec) {
+    long long bin = 0;
+    long long weight = 1;
     while (dec > 0) {
         bin += (dec % 2) * weight;
         weight *= 10;
@@ -12,8 +12,8 @@ int decToBin(int dec) {
     return bin;
 }
 
-int binToDec(int bin) {
-    int dec = 0;
+long long binToDec(long long bin) {
+    long long dec = 0;
     int weight = 1;
     while (bin > 0) {
         dec += (bin % 10) * weight;
@@ -23,9 +23,9 @@ int binToDec(int bin) {
     return dec;
 }
 
-int octToBin(int oct) {
-    int weight = 1;
-    int bin = 0;
+long long octToBin(int oct) {
+    long long weight = 1;
+    long long bin = 0;
     while (oct > 0) {
         int cipher = oct % 10;
         int cipherBin = 0;
@@ -42,12 +42,12 @@ int octToBin(int oct) {
     return bin;
 }
 
-int binToOct(int bin) {
+long long binToOct(long long bin) {
     int weight = 1;
-    int oct = 0;
+    long long oct = 0;
     while (bin > 0) {
-        int cipherBin = bin % 1000;
-        int cipher = 0;
+        long long cipherBin = bin % 1000;
+        long long cipher = 0;
         int cipherWeight = 1;
         while (cipherBin > 0) {
             cipher += (cipherBin % 10) * cipherWeight;
@@ -95,8 +95,8 @@ std::string binToHex(long long bin) {
     if (bin == 0) return "0";
 
     while (bin > 0) {
-        int cipherBin = bin % 10000;
-        int cipher = 0;
+        long long cipherBin = bin % 10000;
+        long long cipher = 0;
         int cipherWeight = 1;
         while (cipherBin > 0) {
             cipher += (cipherBin % 10) * cipherWeight;
@@ -110,10 +110,69 @@ std::string binToHex(long long bin) {
 }
 
 int main() {
-    //std::cout<<decToBin(27);
-    //std::cout<<binToDec(11000000)<<std::endl;
-    //std::cout<<octToBin(12);
-    //std::cout<<binToOct(1010)<<std::endl;
-    //std::cout<<hexToBin("3B");
-    std::cout<<binToHex(110010111010)<<std::endl;
+    std::cout << "Base Systems Calculator - (bin/dec/oct/hex)" << std::endl;
+    std::cout<<"1 - Decimal\n2 - Octal\n3 - Binary\n4 - Hexagonal"<<std::endl;
+
+    std::cout<<"Select the numeral system for your number: ";
+    int sourceChoice;
+    std::cin>>sourceChoice;
+
+    std::cout<<"Enter your number: ";
+    std::string inputNumber;
+    std::cin>>inputNumber;
+
+    std::cout<<"Select the target numeral system: ";
+    int targetChoice;
+    std::cin>>targetChoice;
+
+    long long binBase = 0;
+
+    switch(sourceChoice) {
+        case 1: {
+            binBase = decToBin(std::stoi(inputNumber));
+            break;
+        }
+        case 2: {
+            binBase = octToBin(std::stoi(inputNumber));
+            break;
+        }
+        case 3: {
+            binBase = std::stoll(inputNumber);
+            break;
+        }
+        case 4: {
+            binBase = hexToBin(inputNumber);
+            break;
+        }
+        default: {
+            std::cout<<"Invalid number!"<<std::endl;
+            return 1;
+        }
+    }
+
+
+    std::cout<<"Result: ";
+    switch (targetChoice) {
+        case 1: {
+            std::cout<<binToDec(binBase)<<std::endl;
+            break;
+        }
+        case 2: {
+            std::cout<<binToOct(binBase)<<std::endl;
+            break;
+        }
+        case 3: {
+            std::cout<<binBase<<std::endl;
+            break;
+        }
+        case 4: {
+            std::cout<<binToHex(binBase)<<std::endl;
+            break;
+        }
+        default: {
+            std::cout<<"Invalid number!"<<std::endl;
+            return 1;
+        }
+    }
+    return 0;
 }
