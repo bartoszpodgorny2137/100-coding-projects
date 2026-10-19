@@ -2,6 +2,7 @@
 #include <cstdint>
 #include <string>
 #include <limits>
+#include <array>
 
 std::string toBinary(uint8_t f) {
     std::string s = "";
@@ -32,28 +33,51 @@ int readInt(int min, int max) {
         if (std::cin.fail() || n < min || n > max){
             std::cin.clear();
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-            std::cout<< "Please enter a number ("<<min<<"-"<<max<<"): ";
+            std::cout<< "Please enter a number ("<<min<<"-"<<max<<") ->: ";
         }
-        else return n;
+        else {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            return n;
+        }
+    }
+}
+
+std::string readName(int n){
+    std::string s;
+    while (true) {
+        std::cout<<"Enter a name for "<<n<<" flag ->: ";
+        std::getline(std::cin, s);
+        if (s.empty()) std::cout<< "Invalid name for flag "<<n<<std::endl;
+        else return s;
     }
 }
 
 int main() {
     uint8_t flags = 0b00000000;
-    std::cout << "=== BITMASK MANAGER CLI ==="<< std::endl;
+    std::array<std::string, 8> names;
+    for (int i=0; i<8; i++) {
+        names[i] = "flag" + std::to_string(i);
+    }
     while (true) {
-        std::cout<<"1. set bit\n2. clear bit\n3. toggle bit\n4. check bit\n5. exit"<<std::endl;
-        std::cout<<"flag status: "<<toBinary(flags)<<std::endl;
-        std::cout<<"enter your choice ->: ";
+        std::cout << "=== BITMASK MANAGER CLI ==="<< std::endl;
+        std::cout<<" Flag status: "<<toBinary(flags)<<std::endl;
+        for (int i=0; i<8; i++) {
+            std::cout<<"  ["<<i<<"] "<<names[i]<<": "
+            <<(checkBit(flags, i) ? "ON" : "OFF")<<std::endl;
+        }
+        std::cout<<
+            " 1 - set bit | 2 - clear bit | 3 - toggle bit | 4 - rename bit | 5 - exit"
+        <<std::endl;
+        std::cout<<"Enter your choice ->: ";
         int input = readInt(1, 5);
         if (input == 5) {std::cout<<"Bye!"<<std::endl; break;}
-        std::cout<<"Choose bit (0-7): ";
+        std::cout<<"Choose bit (0-7) ->: ";
         int bit = readInt(0, 7);
         switch (input) {
             case 1: setBit(flags, bit); break;
             case 2: clearBit(flags, bit); break;
             case 3: toggleBit(flags, bit); break;
-            case 4: std::cout<<(checkBit(flags, bit) ? "ON" : "OFF")<<std::endl; break;
+            case 4: names[bit] = readName(bit); break;
         }
     }
 }
