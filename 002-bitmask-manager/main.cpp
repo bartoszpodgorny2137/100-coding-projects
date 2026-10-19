@@ -27,19 +27,24 @@ bool checkBit(uint8_t f, int n) {
 
 int main() {
     uint8_t flags = 0b00000000;
-    setBit(flags, 7);
-    clearBit(flags, 3);
-    toggleBit(flags, 4);
-    std::cout<<checkBit(flags, 7)<<std::endl;
-    std::cout << toBinary(flags)<< std::endl;
-
-    /*
-     *1. set bit
-     *2. clear bit
-     *3. toogle bit
-     *4. check bit
-     *5. exit
-     *
-     */
-
+    std::cout << "Welcome to bitmask manager CLI"<< std::endl;
+    while (true) {
+        std::cout<<"1. set bit\n2. clear bit\n3. toggle bit\n4. check bit\n5. exit"<<std::endl;
+        std::cout<<"flag status: "<<toBinary(flags)<<std::endl;
+        std::cout<<"enter your choice ->: ";
+        int input;
+        std::cin >> input;
+        if (input == 5) {std::cout<<"Bye!"<<std::endl; break;}
+        if (input <= 0 || input >= 5) {std::cout<<"Invalid number!"<<std::endl; continue;}
+        std::cout<<"Choose bit (0-7): ";
+        int bit;
+        std::cin >> bit;
+        if (bit <0 || bit > 7) { std::cout<<"Invalid bit!!!"<<std::endl ; continue; }
+        switch (input) {
+            case 1: setBit(flags, bit); break;
+            case 2: clearBit(flags, bit); break;
+            case 3: toggleBit(flags, bit); break;
+            case 4: std::cout<<(checkBit(flags, bit) ? "ON" : "OFF")<<std::endl; break;
+        }
+    }
 }
