@@ -1,6 +1,7 @@
 #include <iostream>
 #include <array>
 #include <string>
+#include <sstream>
 
 using AsciiTable = std::array<char, 128>;
 
@@ -41,6 +42,21 @@ int encodeChar(const AsciiTable& table, char c) {
     return -1;
 }
 
+char decodeChar(const AsciiTable& table, int n) {
+    if (n >= 32 && n < 127) return table[n];
+    return '?';
+}
+
+std::string decodeText(const AsciiTable& table, const std::string&s) {
+    std::string result;
+    std::istringstream stream(s);
+    int n;
+    while (stream >> n) {
+        result += decodeChar(table, n);
+    }
+    return result;
+}
+
 std::string encodeText(const AsciiTable& table, const std::string& s) {
     std::string result;
     for (int i = 0; i < s.length(); ++i) {
@@ -57,5 +73,5 @@ int main(){
     }
     std::string mess;
     std::getline(std::cin, mess);
-    std::cout<<encodeText(table, mess);
+    std::cout<<decodeText(table, mess);
 }
