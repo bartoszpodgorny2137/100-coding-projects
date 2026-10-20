@@ -2,7 +2,6 @@
 #include <array>
 #include <string>
 
-
 using AsciiTable = std::array<char, 128>;
 
 void placeString(AsciiTable& table, int start, const std::string&s) {
@@ -35,9 +34,28 @@ AsciiTable buildTable() {
     return table;
 }
 
+int encodeChar(const AsciiTable& table, char c) {
+    for (int i = 32; i < 127; i++) {
+        if (table[i] == c) return i;
+    }
+    return -1;
+}
+
+std::string encodeText(const AsciiTable& table, const std::string& s) {
+    std::string result;
+    for (int i = 0; i < s.length(); ++i) {
+        int code = encodeChar(table, s[i]);
+        result += (code == -1) ? "? " : std::to_string(code) + " ";
+    }
+    return result;
+}
+
 int main(){
     const AsciiTable table = buildTable();
     for (int i = 32; i < 127; i++) {
         std::cout<< i << " : " << table[i] << std::endl;
     }
+    std::string mess;
+    std::getline(std::cin, mess);
+    std::cout<<encodeText(table, mess);
 }
