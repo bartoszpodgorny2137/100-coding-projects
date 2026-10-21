@@ -51,9 +51,15 @@ char decodeChar(const AsciiTable& table, int n) {
 std::string decodeText(const AsciiTable& table, const std::string&s) {
     std::string result;
     std::istringstream stream(s);
-    int n;
-    while (stream >> n) {
-        result += decodeChar(table, n);
+    std::string token;
+    while (stream >> token) {
+        try {
+            int n = std::stoi(token);
+            result += decodeChar(table, n);
+        } catch (...) {
+            result += '?';
+        }
+
     }
     return result;
 }
@@ -85,10 +91,10 @@ int readInt(int min, int max) {
 
 int main(){
     const AsciiTable table = buildTable();
-    bool isTrue = true;
-    while (isTrue) {
-        std::cout << "Ascii Encoder/Decoder CLI" << std::endl;
-        std::cout << "1. Encode \n2. Decode \n3. Table\n 4. Exit" << std::endl;
+    bool running = true;
+    std::cout << "Ascii Encoder/Decoder CLI" << std::endl;
+    while (running) {
+        std::cout << "1. Encode \n2. Decode \n3. Table\n4. Exit" << std::endl;
         std::string input;
         std::cout<< "->: ";
         int choice = readInt(1, 4);
@@ -114,7 +120,7 @@ int main(){
             }
             case 4: {
                 std::cout<<"Exiting..."<<std::endl;
-                isTrue = false;
+                running = false;
                 break;
             }
         }
