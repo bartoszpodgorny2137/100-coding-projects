@@ -44,6 +44,23 @@ std::vector<uint8_t> encode(uint32_t cp) {
     }
 }
 
+uint32_t decode(const std::vector<uint8_t>& bytes) {
+    uint32_t result = 0;
+    if ((bytes[0] >> 7) == 0b0) {
+        return bytes[0];
+    }else if ((bytes[0] >> 5) == 0b110) {
+        result = ((bytes[0] & 0b00011111) << 6) | (bytes[1] & 0b00111111);
+        return result;
+    } else if ((bytes[0] >> 4) == 0b1110) {
+        result = ((bytes[0] & 0b00001111) << 12) | ((bytes[1] & 0b00111111) << 6) | (bytes[2] & 0b00111111);
+        return result;
+    } else if ((bytes[0] >> 3) == 0b11110) {
+        result = ((bytes[0] & 0b00000111) << 18 | ((bytes[1] & 0b00111111) << 12) | ((bytes[2] & 0b00111111) << 6) | (bytes[3] & 0b00111111));
+        return result;
+    }
+    return 0;
+}
+
 int main() {
     auto bytes = encode(128512);
     for (uint8_t byte : bytes) {
