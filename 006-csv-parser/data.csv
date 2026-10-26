@@ -1,3 +1,5 @@
 name,age,city
 John,30,Warsaw
 Anne,25,Krakow
+"Kowalski, John",30,"Warsaw"
+"She said ""hi""",30
