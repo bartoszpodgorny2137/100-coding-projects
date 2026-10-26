@@ -25,17 +25,25 @@ struct JsonValue {
 std::string stringify(const JsonValue& value) {
 
     switch (value.type) {
-        case JsonType::Null:
-            return "null";
-        case JsonType::Bool:
-            return value.boolean ? "true" : "false";
+        case JsonType::Null: return "null";
+        case JsonType::Bool: return value.boolean ? "true" : "false";
         case JsonType::Number: {
             std::ostringstream oss;
             oss << value.number;
             return oss.str();
         }
-        case JsonType::String:
-            return '"'+value.str+'"';
+        case JsonType::String: return '"'+value.str+'"';
+        case JsonType::Array: {
+            std::string result = "[";
+            for (size_t i=0; i<value.array.size(); i++){
+                if ( i> 0) {
+                    result += ",";
+                }
+                result += stringify(value.array.at(i));
+            }
+            result += "]";
+            return result;
+        }
     }
     return "";
 }
@@ -57,10 +65,20 @@ int main() {
     JsonValue nothing;
     nothing.type = JsonType::Null;
 
+    JsonValue array;
+    array.type = JsonType::Array;
+    for (int n = 1; n <= 4; n++) {
+        JsonValue item;
+        item.type = JsonType::Number;
+        item.number = n;
+        array.array.push_back(item);
+    }
+
     std::cout<<stringify(value)<<std::endl;
     std::cout<<stringify(nothing)<<std::endl;
     std::cout<<stringify(flag)<<std::endl;
     std::cout<<stringify(str)<<std::endl;
+    std::cout<<stringify(array)<<std::endl;
 
     return 0;
 }
