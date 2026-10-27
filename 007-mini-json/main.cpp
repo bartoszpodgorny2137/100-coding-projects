@@ -69,6 +69,11 @@ void skipWhitespace(const std::string& text, size_t& pos) {
     }
 }
 
+char peek(const std::string& text, size_t pos) {
+    if (pos < text.length()) return text[pos];
+    return '\0';
+}
+
 int main() {
     JsonValue value;
     value.type = JsonType::Number;
