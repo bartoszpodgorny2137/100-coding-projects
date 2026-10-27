@@ -4,6 +4,7 @@
 #include <vector>
 #include <map>
 #include <sstream>
+#include <stdexcept>
 
 enum class JsonType {
     Null,
@@ -74,6 +75,26 @@ char peek(const std::string& text, size_t pos) {
     return '\0';
 }
 
+JsonValue parseLiteral(const std::string& text, size_t& pos) {
+    JsonValue result;
+
+    if (text.substr(pos, 4) == "null"){pos +=4; return result;}
+    if (text.substr(pos, 4) == "true") {
+        pos +=4;
+        result.type = JsonType::Bool;
+        result.boolean = true;
+        return result;
+    }
+    if (text.substr(pos, 5) == "false") {
+        pos +=5;
+        result.type = JsonType::Bool;
+        result.boolean = false;
+        return result;
+    }
+
+    throw std::runtime_error("Unexpected literal at position "+std::to_string(pos)+".");
+}
+
 int main() {
     JsonValue value;
     value.type = JsonType::Number;
@@ -115,6 +136,12 @@ int main() {
     size_t pos = 0;
     skipWhitespace(text, pos);
     std::cout << pos << std::endl;
+
+    for (std::string t : {std::string("null"), std::string("true"), std::string("false")}) {
+        size_t pos = 0;
+        JsonValue v = parseLiteral(t, pos);
+        std::cout << stringify(v) << " (pos=" << pos << ")" << std::endl;
+    }
 
     return 0;
 }
