@@ -44,6 +44,19 @@ std::string stringify(const JsonValue& value) {
             result += "]";
             return result;
         }
+        case JsonType::Object: {
+            std::string result = "{";
+            bool first = true;
+            for (const auto& pair : value.object) {
+                if (!first) {
+                    result += ",";
+                }
+                first = false;
+                result += '"'+pair.first+'"'+':'+stringify(pair.second);
+            }
+            result += "}";
+            return result;
+        }
     }
     return "";
 }
@@ -74,11 +87,17 @@ int main() {
         array.array.push_back(item);
     }
 
+    JsonValue object;
+    object.type = JsonType::Object;
+    object.object["age"] = value;
+    object.object["name"] = str;
+
     std::cout<<stringify(value)<<std::endl;
     std::cout<<stringify(nothing)<<std::endl;
     std::cout<<stringify(flag)<<std::endl;
     std::cout<<stringify(str)<<std::endl;
     std::cout<<stringify(array)<<std::endl;
+    std::cout <<stringify(object)<< std::endl;
 
     return 0;
 }
