@@ -61,6 +61,13 @@ std::string stringify(const JsonValue& value) {
     return "";
 }
 
+void skipWhitespace(const std::string& text, size_t& pos) {
+    while (pos < text.length() &&
+        (text[pos] == ' ' || text[pos] == '\t' || text[pos] == '\r' || text[pos] == '\n')
+        ) {
+        pos++;
+    }
+}
 
 int main() {
     JsonValue value;
@@ -98,6 +105,11 @@ int main() {
     std::cout<<stringify(str)<<std::endl;
     std::cout<<stringify(array)<<std::endl;
     std::cout <<stringify(object)<< std::endl;
+
+    std::string text = "   [1]";
+    size_t pos = 0;
+    skipWhitespace(text, pos);
+    std::cout << pos << std::endl;
 
     return 0;
 }
